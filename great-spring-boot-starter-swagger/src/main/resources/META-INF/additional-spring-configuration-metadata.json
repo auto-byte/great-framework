@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "springfox.documentation.basePackage",
+      "type": "java.lang.String",
+      "description": "api bask package."
+    },
+    {
+      "name": "springfox.documentation.pathRegex",
+      "type": "java.lang.String",
+      "description": "api bask package."
+    },
+    {
+      "name": "springfox.documentation.pathMapping",
+      "type": "java.lang.String",
+      "description": "api bask package."
+    },
+    {
+      "name": "springfox.documentation.title",
+      "type": "java.lang.String",
+      "description": "api bask package."
+    },
+    {
+      "name": "springfox.documentation.globalToken",
+      "type": "java.lang.Boolean",
+      "description": "api bask package."
+    }
+  ]
+}

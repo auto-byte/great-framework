@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <!-- For sentry -->
+    <appender name="SENTRY" class="io.sentry.logback.SentryAppender">
+        <minimumEventLevel>ERROR</minimumEventLevel>
+    </appender>
+
+    <logger name="sentry.logger" level="INFO">
+        <!-- SENTRY输出-->
+        <appender-ref ref="SENTRY"/>
+    </logger>
+</included>

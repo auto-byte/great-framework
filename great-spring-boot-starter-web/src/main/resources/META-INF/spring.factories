@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.great.cache.RedisCacheConfig,\
+com.great.feign.FeignConfig,\
+com.great.web.WebConfig

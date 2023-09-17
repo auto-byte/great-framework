@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.great</groupId>
+    <artifactId>great-framework</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>great-dependencies</module>
+        <module>great-parent</module>
+        <module>great-micro-parent</module>
+        <module>great-common-model</module>
+        <module>great-common-utils</module>
+        <module>great-common-web</module>
+        <module>great-common-web-spring</module>
+        <module>great-dist-lock</module>
+        <module>great-spring-boot-starter-lock</module>
+        <module>great-spring-boot-starter-logging</module>
+        <module>great-spring-boot-starter-mybatis-plus</module>
+        <module>great-spring-boot-starter-swagger</module>
+        <module>great-spring-boot-starter-xxl-job</module>
+        <module>great-spring-boot-starter-web</module>
+        <module>great-common-page</module>
+    </modules>
+
+    <properties>
+        <releases.repo>http://127.0.0.1:8081/repository/maven-releases/</releases.repo>
+        <snapshots.repo>http://127.0.0.1:8081/repository/maven-snapshots/</snapshots.repo>
+        <public.repo>http://127.0.0.1:8081/repository/maven-public/</public.repo>
+    </properties>
+
+    <!--推送jar到私服需配置如下-->
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>local private nexus releases</name>
+            <url>${releases.repo}</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>local private nexus snapshots</name>
+            <url>${snapshots.repo}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>nexus</name>
+            <url>${public.repo}</url>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus</id>
+            <name>nexus</name>
+            <url>${public.repo}</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <!-- 要将源码放上去,需要加入这个插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- >=2.8.x版本支持settings.xml配置altSnapshotDeploymentRepository上传jar到私服 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

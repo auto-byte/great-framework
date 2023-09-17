@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.great</groupId>
+    <artifactId>great-dependencies</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <spring-boot.version>2.5.5</spring-boot.version>
+        <spring-cloud.version>2020.0.4</spring-cloud.version>
+        <spring-cloud-alibaba.version>2.2.6.RELEASE</spring-cloud-alibaba.version>
+        <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
+        <lombok.version>1.18.20</lombok.version>
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <mysql-connector.version>8.0.26</mysql-connector.version>
+        <pagehelper.version>5.3.0</pagehelper.version>
+        <pagehelper-starter.version>1.4.0</pagehelper-starter.version>
+
+        <swagger.version>1.5.20</swagger.version>
+        <swagger-starter.version>3.0.0</swagger-starter.version>
+
+        <redisson.version>3.16.2</redisson.version>
+
+        <xxl-job.version>2.3.1</xxl-job.version>
+
+        <great-common-web.version>2.0.0-SNAPSHOT</great-common-web.version>
+        <great-common-page.version>2.0.0-SNAPSHOT</great-common-page.version>
+        <great-common-web-spring.version>2.0.0-SNAPSHOT</great-common-web-spring.version>
+        <great-common-model.version>2.0.0-SNAPSHOT</great-common-model.version>
+        <great-common-utils.version>2.0.0-SNAPSHOT</great-common-utils.version>
+
+        <great-web-starter.version>2.0.0-SNAPSHOT</great-web-starter.version>
+        <great-lock-starter.version>2.0.0-SNAPSHOT</great-lock-starter.version>
+        <great-xxl-job-starter.version>2.0.0-SNAPSHOT</great-xxl-job-starter.version>
+        <great-logging-starter.version>2.0.0-SNAPSHOT</great-logging-starter.version>
+        <great-mybatis-starter.version>2.0.0-SNAPSHOT</great-mybatis-starter.version>
+        <great-swagger-starter.version>2.0.0-SNAPSHOT</great-swagger-starter.version>
+
+        <releases.repo>https://packages.aliyun.com/maven/repository/2262142-release-tskcuf/</releases.repo>
+        <snapshots.repo>https://packages.aliyun.com/maven/repository/2262142-snapshot-zKUrTQ/</snapshots.repo>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>${swagger-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!--推送jar到私服需配置如下-->
+    <distributionManagement>
+        <repository>
+            <id>rdc-releases</id>
+            <name>Nexus Release Repository</name>
+            <url>https://packages.aliyun.com/maven/repository/2262142-release-tskcuf/</url>
+        </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <name>Nexus Release Repository</name>
+            <url>https://packages.aliyun.com/maven/repository/2262142-snapshot-zKUrTQ/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>

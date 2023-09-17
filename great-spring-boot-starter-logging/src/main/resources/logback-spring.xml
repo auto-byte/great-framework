@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+1、从高到低 OFF 、 FATAL 、 ERROR 、 WARN 、 INFO 、 DEBUG 、 TRACE 、 ALL
+2、日志输出规则: 根据当前ROOT级别, 日志输出时级别高于ROOT默认的级别时会输出
+   以下每个配置的filter过滤掉输出文件里面, 高级别文件依然出现低级别的日志信息, 通过filter过滤只记录本级别的日志
+3、属性描述scan: 设置为true时, 配置文件如果发生改变, 将会被重新加载, 默认值为true, scanPeriod:设置监测配置文件是否有修改的时间间隔,
+   如果没有给出时间单位, 默认单位是毫秒。当scan为true时, 此属性生效。默认的时间间隔为1分钟。
+    debug:当此属性设置为true时, 将打印出logback内部日志信息, 实时查看logback运行状态。默认值为false。
+-->
+<configuration scan="true" scanPeriod="600 seconds" debug="false">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!-- 自定义日志 -->
+    <include resource="logback/logback-additional.xml"/>
+
+    <!-- 定义日志文件输入位置, 在配置文件中指定 -->
+    <springProperty scope="context" name="APPLICATION_NAME" source="spring.application.name"/>
+    <springProperty scope="context" name="SENTRY_ENABLE" source="sentry.enable"/>
+
+    <!-- 日志存放目录-->
+    <property name="LOG_PATH" value="${LOG_PATH:-/opt/logs/${APPLICATION_NAME}}"/>
+    <!-- 日志清除，默认否 -->
+    <property name="CLEAR_HISTORY" value="${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:-false}"/>
+    <!-- 日志最大的历史 ?天, 默认20 -->
+    <property name="MAX_HISTORY" value="${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:-20}"/>
+    <!-- 日志最大文件大小，默认20MB-->
+    <property name="MAX_FILE_SIZE" value="${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-20MB}"/>
+    <!-- 日志要保留的备份总大小, 默认是0-->
+    <property name="TOTAL_SIZE_CAP" value="${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:-0}"/>
+    <!-- 日志格式，文件-->
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n"/>
+    <contextName>${APPLICATION_NAME}</contextName>
+    <!-- ConsoleAppender控制台输出日志 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 对日志进行格式化, 控制台输出用layout, 文件输出用encode -->
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset><!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
+
+    <if condition='property("SENTRY_ENABLE").contains("true")'>
+        <then>
+            <include resource="logback/logback-sentry.xml"/>
+        </then>
+    </if>
+
+    <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/all-log.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+            <cleanHistoryOnStart>${CLEAR_HISTORY}</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- RollingFileAppender文件输出日志 -->
+    <!-- 滚动记录文件, 先将日志记录到指定文件, 当符合某个条件时, 将日志记录到其他文件 RollingFileAppender-->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤器, 只记录ERROR级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!--过滤Error-->
+            <level>ERROR</level>
+            <!--匹配到就允许-->
+            <onMatch>ACCEPT</onMatch>
+            <!--没有匹配到就禁止-->
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!-- 最常用的滚动策略, 它根据时间来制定滚动策略, 既负责滚动也负责触发滚动 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志输出位置, 可相对、和绝对路径 -->
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/error-log.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+            <cleanHistoryOnStart>${CLEAR_HISTORY}</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/warn-log.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+            <cleanHistoryOnStart>${CLEAR_HISTORY}</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/info-log.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+            <cleanHistoryOnStart>${CLEAR_HISTORY}</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/debug-log.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+            <cleanHistoryOnStart>${CLEAR_HISTORY}</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- root -->
+    <root level="INFO">
+        <!-- 控制台输出 -->
+        <appender-ref ref="CONSOLE"/>
+        <!-- 文件输出-->
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="WARN"/>
+        <appender-ref ref="INFO"/>
+        <appender-ref ref="DEBUG"/>
+        <appender-ref ref="ALL"/>
+        <!-- SENTRY输出-->
+        <if condition='property("SENTRY_ENABLE").contains("true")'>
+            <then>
+                <appender-ref ref="SENTRY"/>
+            </then>
+        </if>
+    </root>
+
+    <!--开发环境: 打印控制台-->
+    <springProfile name="dev">
+        <logger name="com.great" level="debug"/>
+    </springProfile>
+
+</configuration>
